@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const parser = require('vdata-parser');
 const request = require('request');
 const boxen = require("boxen");
