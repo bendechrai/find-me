@@ -1,0 +1,24 @@
+{
+  "name": "@bendechrai/find-me",
+  "version": "1.0.0",
+  "description": "An npm module that prints my upcoming calendar of events",
+  "main": "index.js",
+  "dependencies": {
+    "boxen": "^4.1.0",
+    "chalk": "^2.4.2",
+    "request": "^2.88.0",
+    "vdata-parser": "^0.1.5"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bendechrai/find-me.git"
+  },
+  "author": "Ben Dechrai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bendechrai/find-me/issues"
+  },
+  "homepage": "https://github.com/bendechrai/find-me#readme"
+}
