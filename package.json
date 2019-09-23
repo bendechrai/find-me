@@ -11,6 +11,9 @@
   },
   "devDependencies": {},
   "scripts": {},
+  "bin": {
+    "find-me": "index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bendechrai/find-me.git"
