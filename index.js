@@ -124,7 +124,7 @@ function renderEventLine(event) {
 
     // Make a nicer date
     const dateParts = event.start.split(/(....)(..)(..)/);
-    let friendlyDate = new Date(dateParts[1], dateParts[2], dateParts[3]);
+    let friendlyDate = new Date(dateParts[1], dateParts[2]-1, dateParts[3]);
     friendlyDate = friendlyDate.toDateString();
 
     // Fix the obviously wrong order of components from toDateString()

@@ -1,6 +1,6 @@
 {
   "name": "@bendechrai/find-me",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "An npm module that prints my upcoming calendar of events",
   "main": "index.js",
   "dependencies": {
