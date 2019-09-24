@@ -85,7 +85,9 @@ function processCalendar(data) {
 
   // Render events
   if(argv.json) {
-    console.log(JSON.stringify(events));
+    console.log(JSON.stringify({
+      events: events
+    }));
   } else {
     renderBox(events);
   }
