@@ -1,4 +1,17 @@
 #!/usr/bin/env node
+const argv = require(`yargs`)
+  .boolean([`json`,`historical`])
+  .option(`json`, {
+    alias: `j`,
+    describe: `Output as JSON instead of human readable`,
+    default: false
+  })
+  .option(`historical`, {
+    alias: `h`,
+    describe: `Show historical events too`,
+    default: false
+  })
+  .argv;
 
 const parser = require('vdata-parser');
 const request = require('request');
@@ -46,9 +59,9 @@ function processCalendar(data) {
 
     // Build and store the event info in the right event list
     let event = {
-      start     : getDatum(vEvent.DTSTART.value, 8),
-      name      : getDatum(vEvent.SUMMARY, 50),
-      location  : getDatum(vEvent.LOCATION, 30),
+      start     : getDatum(vEvent.DTSTART.value).slice(0,8),
+      name      : getDatum(vEvent.SUMMARY),
+      location  : getDatum(vEvent.LOCATION),
       role      : getDatum(details.role),
       type      : getDatum(details.type),
     };
@@ -56,20 +69,32 @@ function processCalendar(data) {
 
   });
 
-  // Sort he lists of events
+  // Sort the lists of events
   const sortByStartDate = (a,b) => a.start - b.start;
   events.speaker.sort(sortByStartDate);
   events.host.sort(sortByStartDate);
 
+  // Remove past events
+  if(!argv.historical) {
+    let today = new Date();
+    today = today.getFullYear().toString() + (today.getMonth()+1).toString().padStart(2, "0") + today.getDate().toString().padStart(2, "0");
+    const filterByStartDate = (a) => a.start > today;
+    events.speaker = events.speaker.filter(filterByStartDate);
+    events.host = events.host.filter(filterByStartDate);
+  }
+
   // Render events
-  renderBox(events);
+  if(argv.json) {
+    console.log(JSON.stringify(events));
+  } else {
+    renderBox(events);
+  }
 
 }
 
-function getDatum(input, maxlen=-1) {
+function getDatum(input) {
   let datum = input || "";
   datum = datum.replace(/\\,/g, ',');
-  if (maxlen>0) datum = datum.padEnd(maxlen).slice(0,maxlen);
   return datum;
 }
 
@@ -93,13 +118,6 @@ function decodeDescription(details) {
 
 
 function renderBox(events) {
-
-  // Remove past events
-  let today = new Date();
-  today = today.getFullYear().toString() + (today.getMonth()+1).toString().padStart(2, "0") + today.getDate().toString().padStart(2, "0");
-  const filterByStartDate = (a) => a.start > today;
-  events.speaker = events.speaker.filter(filterByStartDate);
-  events.host = events.host.filter(filterByStartDate);
 
   // Build speaking events
   let content = `${heading("Ben\'s Speaking Events")}\n\n`;
@@ -130,5 +148,5 @@ function renderEventLine(event) {
     // Fix the obviously wrong order of components from toDateString()
     friendlyDate = friendlyDate.replace(/(...) (...) (..) (....)/, `$1 $3 $2 $4`);
 
-    return `${colour(friendlyDate)}  -  ${colour(event.location)}  ${colour(event.name)}\n`;
+    return `${colour(friendlyDate)}   ${colour(event.name.padEnd(50).slice(0,50))}    ${colour(event.location.padStart(30).slice(-30))}\n`;
 }

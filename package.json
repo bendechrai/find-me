@@ -7,7 +7,8 @@
     "boxen": "^4.1.0",
     "chalk": "^2.4.2",
     "request": "^2.88.0",
-    "vdata-parser": "^0.1.5"
+    "vdata-parser": "^0.1.5",
+    "yargs": "^14.0.0"
   },
   "devDependencies": {},
   "scripts": {},
