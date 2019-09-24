@@ -22,6 +22,7 @@ const meetup = chalk.cyan;
 const conference = chalk.yellow;
 const heading = chalk.bold.green;
 const key = chalk.underline;
+const border = chalk.gray;
 
 const cardOptions = {
   padding: 1,
@@ -86,7 +87,15 @@ function processCalendar(data) {
   // Render events
   if(argv.json) {
     console.log(JSON.stringify({
-      events: events
+      events: events,
+      about: {
+        job: 'Ben Dechrai is a Developer Advocate working at Auth0',
+        website: 'https://ben.sc/',
+        twitter: 'https://ben.sc/twitter',
+        github : 'https://ben.sc/github',
+        youtube: 'https://ben.sc/youtube',
+        linkedin: 'https://ben.sc/linkedin'
+      }
     }));
   } else {
     renderBox(events);
@@ -130,7 +139,14 @@ function renderBox(events) {
   events.host.forEach((event) => content += renderEventLine(event));
 
   // Build key
-  content += `\n\n${key.inverse('Key:')} ${conference.inverse(' Conference ')} ${meetup.inverse(' Meetup ')}`;
+  content += `\n\n${key.inverse('Key:')} ${conference.inverse(' Conference ')} ${meetup.inverse(' Meetup ')}\n\n`;
+
+  // Build footer
+  content += `${border('------------------------------------------------------------------------------------------------------')}\n\n`;
+  content += `                        ${border(key('Ben Dechrai is a Developer Advocate working at Auth0'))}\n\n`;
+  content += `${border('Website: https://ben.sc/')}\n`;
+  content += `${border('Twitter: https://ben.sc/twitter                                       Youtube: https://ben.sc/youtube')}\n`;
+  content += `${border('GitHub : https://ben.sc/github                                       LinkedIn: https://ben.sc/linkedin')}`;
 
   // Render content
   console.log(boxen(content, cardOptions));
