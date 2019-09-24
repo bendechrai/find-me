@@ -1,22 +1,22 @@
 #!/usr/bin/env node
-const argv = require(`yargs`)
-  .boolean([`json`,`historical`])
-  .option(`json`, {
-    alias: `j`,
-    describe: `Output as JSON instead of human readable`,
+const argv = require('yargs')
+  .boolean(['json','historical'])
+  .option('json', {
+    alias: 'j',
+    describe: 'Output as JSON instead of human readable',
     default: false
   })
-  .option(`historical`, {
-    alias: `h`,
-    describe: `Show historical events too`,
+  .option('historical', {
+    alias: 'h',
+    describe: 'Show historical events too',
     default: false
   })
   .argv;
 
 const parser = require('vdata-parser');
 const request = require('request');
-const boxen = require("boxen");
-const chalk = require("chalk");
+const boxen = require('boxen');
+const chalk = require('chalk');
 
 const meetup = chalk.cyan;
 const conference = chalk.yellow;
@@ -52,8 +52,8 @@ function processCalendar(data) {
       details = JSON.parse(details);
     } catch(e) {
       details = {
-        "malformedJson": true,
-        "originalData": details
+        malformedJson: true,
+        originalData: details
       };
     }
 
@@ -77,7 +77,7 @@ function processCalendar(data) {
   // Remove past events
   if(!argv.historical) {
     let today = new Date();
-    today = today.getFullYear().toString() + (today.getMonth()+1).toString().padStart(2, "0") + today.getDate().toString().padStart(2, "0");
+    today = today.getFullYear().toString() + (today.getMonth()+1).toString().padStart(2, '0') + today.getDate().toString().padStart(2, '0');
     const filterByStartDate = (a) => a.start > today;
     events.speaker = events.speaker.filter(filterByStartDate);
     events.host = events.host.filter(filterByStartDate);
@@ -93,7 +93,7 @@ function processCalendar(data) {
 }
 
 function getDatum(input) {
-  let datum = input || "";
+  let datum = input || '';
   datum = datum.replace(/\\,/g, ',');
   return datum;
 }
@@ -120,15 +120,15 @@ function decodeDescription(details) {
 function renderBox(events) {
 
   // Build speaking events
-  let content = `${heading("Ben\'s Speaking Events")}\n\n`;
+  let content = `${heading("Ben's Speaking Events")}\n\n`;
   events.speaker.forEach((event) => content += renderEventLine(event));
 
   // Build hosting events
-  content += `\n${heading("Ben\'s Hosting Events")}\n\n`;
+  content += `\n${heading("Ben's Hosting Events")}\n\n`;
   events.host.forEach((event) => content += renderEventLine(event));
 
   // Build key
-  content += `\n\n${key.inverse("Key:")} ${conference.inverse(" Conference ")} ${meetup.inverse(" Meetup ")}`;
+  content += `\n\n${key.inverse('Key:')} ${conference.inverse(' Conference ')} ${meetup.inverse(' Meetup ')}`;
 
   // Render content
   console.log(boxen(content, cardOptions));
