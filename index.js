@@ -41,7 +41,7 @@ request.get(
 function processCalendar(data) {
 
   const vCal = parser.fromString(data).VCALENDAR.VEVENT;
-  let events = { speaker: [], host: [] };
+  let events = { speaker: [], host: [], booth: [] };
 
   vCal.forEach((vEvent) => {
 
@@ -74,6 +74,7 @@ function processCalendar(data) {
   const sortByStartDate = (a,b) => a.start - b.start;
   events.speaker.sort(sortByStartDate);
   events.host.sort(sortByStartDate);
+  events.booth.sort(sortByStartDate);
 
   // Remove past events
   if(!argv.historical) {
@@ -82,6 +83,7 @@ function processCalendar(data) {
     const filterByStartDate = (a) => a.start > today;
     events.speaker = events.speaker.filter(filterByStartDate);
     events.host = events.host.filter(filterByStartDate);
+    events.booth = events.booth.filter(filterByStartDate);
   }
 
   // Render events
@@ -130,13 +132,25 @@ function decodeDescription(details) {
 
 function renderBox(events) {
 
+  let content = '';
+
   // Build speaking events
-  let content = `${heading("Ben's Speaking Events")}\n\n`;
-  events.speaker.forEach((event) => content += renderEventLine(event));
+  if(events.speaker.length > 0) {
+    content = `${heading("I'm speaking at")}\n\n`;
+    events.speaker.forEach((event) => content += renderEventLine(event));
+  }
 
   // Build hosting events
-  content += `\n${heading("Ben's Hosting Events")}\n\n`;
-  events.host.forEach((event) => content += renderEventLine(event));
+  if(events.host.length > 0) {
+    content += `\n${heading("I'm running these")}\n\n`;
+    events.host.forEach((event) => content += renderEventLine(event));
+  }
+
+  // Build booth events
+  if(events.booth.length > 0) {
+    content += `\n${heading("I'll be at a booth here")}\n\n`;
+    events.booth.forEach((event) => content += renderEventLine(event));
+  }
 
   // Build key
   content += `\n\n${key.inverse('Key:')} ${conference.inverse(' Conference ')} ${meetup.inverse(' Meetup ')}\n\n`;
