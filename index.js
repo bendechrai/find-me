@@ -41,7 +41,7 @@ request.get(
 function processCalendar(data) {
 
   const vCal = parser.fromString(data).VCALENDAR.VEVENT;
-  let events = { speaker: [], host: [], booth: [] };
+  let events = { speaker: [], host: [], booth: [], attendee: [] };
 
   vCal.forEach((vEvent) => {
 
@@ -75,6 +75,7 @@ function processCalendar(data) {
   events.speaker.sort(sortByStartDate);
   events.host.sort(sortByStartDate);
   events.booth.sort(sortByStartDate);
+  events.attendee.sort(sortByStartDate);
 
   // Remove past events
   if(!argv.historical) {
@@ -84,6 +85,7 @@ function processCalendar(data) {
     events.speaker = events.speaker.filter(filterByStartDate);
     events.host = events.host.filter(filterByStartDate);
     events.booth = events.booth.filter(filterByStartDate);
+    events.attendee = events.attendee.filter(filterByStartDate);
   }
 
   // Render events
@@ -150,6 +152,12 @@ function renderBox(events) {
   if(events.booth.length > 0) {
     content += `\n${heading("I'll be at a booth here")}\n\n`;
     events.booth.forEach((event) => content += renderEventLine(event));
+  }
+
+  // Build attendee events
+  if(events.booth.length > 0) {
+    content += `\n${heading("I'll be attenting")}\n\n`;
+    events.attendee.forEach((event) => content += renderEventLine(event));
   }
 
   // Build key
